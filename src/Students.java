@@ -8,6 +8,9 @@ public class Students implements Comparable<Students>{
 	private int read;
 	private static int totalStudents=0;
 	
+	public Students() {
+		totalStudents++;
+	}
 	public Students(String name, int age,int math,int la, int read){
 		totalStudents+=1;
 		this.name=name;

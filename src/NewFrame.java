@@ -12,21 +12,25 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JTable;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
-public class NewFrame {
+public class NewFrame implements TableModelListener{
 
 	JTable table;
+	JFrame frame;
 	StudentDB students;
 	static Object[][] data;
+	Object[][] backup;
 	String[] columnNames = { "Name", "Age", "Math Level", "Reading Level",
 			"Language Arts Level" };
 	String[] validStates = { "", "K", "1", "2", "3", "4", "5", "6", "7", "8" };
 
-	public NewFrame(JFrame frame, StudentDB s) {
+	public NewFrame(JFrame f, StudentDB s) {
 		ColumnRenderer cr = new ColumnRenderer();
-
+		frame = f;
 		students = s;
 		try {
 			UIManager
@@ -57,6 +61,7 @@ public class NewFrame {
 		populateTable();
 
 		table = new JTable(data, columnNames);
+		table.getModel().addTableModelListener(this);
 
 		// Create the combo box editor
 		JComboBox comboBox = new JComboBox(validStates);
@@ -116,6 +121,8 @@ public class NewFrame {
 		data[i][2] = "";
 		data[i][3] = "";
 		data[i][4] = "";
+		
+		backup = data;
 
 	}
 
@@ -131,6 +138,55 @@ public class NewFrame {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		int row = e.getFirstRow();
+		int column = e.getColumn();
+		TableModel model = (TableModel)e.getSource();
+        Object d = model.getValueAt(row, column);
+        System.out.println(d.toString());
+        
+        Object oldName = backup[row][0];
+        Students s;
+        boolean newStudent = false;
+        if (students.hasStudent(oldName.toString())) {
+        	s = students.getStudent(oldName.toString());
+        } else {
+        	s = new Students();
+        	newStudent = true;
+        }
+        
+        int x;
+        switch(column) {
+        case 0: 
+        	s.setName(d.toString());
+        	break;
+        case 1:
+        	x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
+        	s.setAge(x);
+        	break;
+        case 2:
+        	x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
+        	s.setMath(x);
+        	break;
+        case 3:
+        	x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
+        	s.setRead(x);
+        	break;	
+        case 4:
+        	x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
+        	s.setLA(x);
+        	break;
+        }
+        
+        if (newStudent) {
+        	students.addStudent(s);
+        } else {
+        	students.modifyStudent(oldName.toString(), s);
+        }
+		
 	}
 
 }
