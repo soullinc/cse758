@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,7 +26,7 @@ public class Menu extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	JMenuBar bar;
 	JMenu file, edit, exit;
-	JMenuItem new1, open, save, copy, paste, exit1;
+	JMenuItem open, save, copy, paste, exit1;
 	JTextArea textArea;
 	JFileChooser chooser;
 	FileOutputStream fos;
@@ -36,13 +38,10 @@ public class Menu extends JFrame implements ActionListener {
 		bar = new JMenuBar();
 		bar.setFont(new Font("Arial", Font.BOLD, 14));
 		file = new JMenu(" File ");
-		new1 = new JMenuItem(" New     ");
-		new1.addActionListener(this);
 		open = new JMenuItem(" Open... ");
 		open.addActionListener(this);
 		save = new JMenuItem(" Save... ");
 		save.addActionListener(this);
-		file.add(new1);
 		file.add(open);
 		file.add(save);
 		bar.add(file);
@@ -64,25 +63,23 @@ public class Menu extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		Object obj = event.getSource();
 		chooser = new JFileChooser();
-		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-			if (obj.equals(open)) {
-				// use chooser.getSelectedFile() to get file
-				// Some code here to parse or call a parser
+		if (obj.equals(open)) {
+			// use chooser.getSelectedFile() to get file
+			// Some code here to parse or call a parser
+			if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
 				readFile(chooser.getSelectedFile());
 
-			} else if (obj.equals(new1)) {
+		} else if (obj.equals(save)) {
+			if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+				writeFile(chooser.getSelectedFile());
+		} else if (obj.equals(copy)) {
 
-			} else if (obj.equals(save)) {
-				// Some code here to write
+		} else if (obj.equals(paste)) {
 
-			} else if (obj.equals(copy)) {
-
-			} else if (obj.equals(paste)) {
-
-			} else if (obj.equals(exit1)) {
-				// Probably want to do checking here
-				System.exit(0);
-			}
+		} else if (obj.equals(exit1)) {
+			// Probably want to do checking here
+			System.exit(0);
+		}
 
 	}
 
@@ -112,6 +109,30 @@ public class Menu extends JFrame implements ActionListener {
 					// error
 				}
 			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void writeFile(File filename) {
+		try {
+			FileOutputStream fos = new FileOutputStream(filename);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+			ArrayList<Students> stds = students.getStudents();
+
+			for (int i = 0; i < students.getSize(); i++) {
+				Students s = stds.get(i);
+				String line;
+				line = s.getName() + "," + s.getAge() + "," + s.getMath() + ","
+						+ s.getRead() + "," + s.getLA() + "\n";
+				bw.append(line);
+
+			}
+			bw.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
