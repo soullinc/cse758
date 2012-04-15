@@ -25,6 +25,7 @@ public class Menu extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	JMenuBar bar;
+	JFrame frame;
 	JMenu file, edit, exit;
 	JMenuItem open, save, copy, paste, exit1;
 	JTextArea textArea;
@@ -33,7 +34,8 @@ public class Menu extends JFrame implements ActionListener {
 	BufferedWriter bwriter;
 	StudentDB students;
 
-	public Menu(StudentDB s) {
+	public Menu(StudentDB s, JFrame f) {
+		frame = f;
 		students = s;
 		bar = new JMenuBar();
 		bar.setFont(new Font("Arial", Font.BOLD, 14));
@@ -109,6 +111,7 @@ public class Menu extends JFrame implements ActionListener {
 					// error
 				}
 			}
+			new NewFrame(frame, students);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

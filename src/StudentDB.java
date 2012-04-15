@@ -14,7 +14,7 @@ public class StudentDB {
 	
 	public void addStudent (Students s) {
 		students.add(s);
-		new NewFrame(frame,this);
+		//new NewFrame(frame,this);
 		
 	}
 	
