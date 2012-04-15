@@ -104,8 +104,8 @@ public class Menu extends JFrame implements ActionListener {
 					Students s = new Students(params[0],
 							Integer.parseInt(params[1]),
 							Integer.parseInt(params[2]),
-							Integer.parseInt(params[3]),
-							Integer.parseInt(params[4]));
+							Integer.parseInt(params[4]),
+							Integer.parseInt(params[3]));
 					students.addStudent(s);
 				} else {
 					// error
