@@ -12,12 +12,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 
 public class Menu extends JFrame implements ActionListener {
 	/**
@@ -25,9 +28,11 @@ public class Menu extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	JMenuBar bar;
+	JToolBar tb;
 	JFrame frame;
 	JMenu file, edit, exit;
 	JMenuItem open, save, copy, paste, exit1;
+	JButton openb, saveb, exitb, scheduleb;
 	JTextArea textArea;
 	JFileChooser chooser;
 	FileOutputStream fos;
@@ -54,41 +59,68 @@ public class Menu extends JFrame implements ActionListener {
 		edit.add(paste);
 		bar.add(edit);
 		exit = new JMenu(" Exit ");
-		exit1 = new JMenuItem("Exit Your App");
+		exit1 = new JMenuItem("Exit Application");
 		exit1.addActionListener(this);
 
 		exit.add(exit1);
 		bar.add(exit);
+
+		// Create Toolbar
+		tb = new JToolBar();
+		ImageIcon openi = new ImageIcon(getClass().getResource("open.png"));
+		ImageIcon savei = new ImageIcon(getClass().getResource("save.png"));
+		ImageIcon exiti = new ImageIcon(getClass().getResource("exit.png"));
+
+        openb = new JButton(openi);
+        openb.addActionListener(this);
+        saveb = new JButton(savei);
+        saveb.addActionListener(this);
+        exitb = new JButton(exiti);
+        exitb.addActionListener(this);
+        scheduleb = new JButton("Generate Schedule");
+        scheduleb.addActionListener(this);
+        
+        tb.add(openb);
+        tb.add(saveb);
+        tb.add(exitb);
+        tb.add(scheduleb);
+        tb.setAlignmentX(0);
+
 
 	}
 
 	public void actionPerformed(ActionEvent event) {
 		Object obj = event.getSource();
 		chooser = new JFileChooser();
-		if (obj.equals(open)) {
+		if (obj.equals(open) || obj.equals(openb)) {
 			// use chooser.getSelectedFile() to get file
 			// Some code here to parse or call a parser
 			if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
 				readFile(chooser.getSelectedFile());
 
-		} else if (obj.equals(save)) {
+		} else if (obj.equals(save) || obj.equals(saveb)) {
 			if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
 				writeFile(chooser.getSelectedFile());
 		} else if (obj.equals(copy)) {
 
 		} else if (obj.equals(paste)) {
 
-		} else if (obj.equals(exit1)) {
-			// Probably want to do checking here
+		} else if (obj.equals(exit1) || obj.equals(exitb)) {
+			// Probably want to do checking here if user wants to save
 			System.exit(0);
+		} else if (obj.equals(scheduleb)) {
+			//Code here to call schedule algorithm and display schedules
 		}
 
 	}
 
-	public JMenuBar get_menu() {
+	public JMenuBar getMenu() {
 		return bar;
 	}
 
+	public JToolBar getToolBar() {
+		return tb;
+	}
 	private void readFile(File filename) {
 		try {
 			FileInputStream fis = new FileInputStream(filename);

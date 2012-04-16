@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -5,12 +6,15 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -47,17 +51,18 @@ public class NewFrame implements TableModelListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Menu menu = new Menu(students, frame);
-		JMenuBar menuBar = menu.get_menu();
-
+		JMenuBar menuBar = menu.getMenu();
 		frame.setJMenuBar(menuBar);
-
-		menuBar.setOpaque(true);
-		menuBar.setBackground(new Color(128, 128, 128));
 		menuBar.setPreferredSize(new Dimension(200, 20));
-
 		// Set the menu bar and add the label to the content pane.
 		frame.setJMenuBar(menuBar);
-
+		
+		JToolBar tb = menu.getToolBar();
+		JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(tb);
+        frame.add(panel, BorderLayout.NORTH);
+		
 		populateTable();
 
 		table = new JTable(data, columnNames);
@@ -71,7 +76,7 @@ public class NewFrame implements TableModelListener {
 		comboBox.setEditable(true);
 		DefaultCellEditor editor = new DefaultCellEditor(comboBox);
 
-		//Render comboboxes properly
+		// Render comboboxes properly
 		TableColumnModel tcm = table.getColumnModel();
 		tcm.getColumn(2).setCellEditor(editor);
 		tcm.getColumn(2).setCellRenderer(cr);
@@ -80,12 +85,10 @@ public class NewFrame implements TableModelListener {
 		tcm.getColumn(4).setCellEditor(editor);
 		tcm.getColumn(4).setCellRenderer(cr);
 
-
-		//Make Table Scrollable
+		// Make Table Scrollable
 		JScrollPane pane = new JScrollPane(table);
 		pane.setSize(dimension);
-		
-		
+
 		frame.add(pane);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
