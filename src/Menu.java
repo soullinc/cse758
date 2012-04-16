@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 
@@ -71,27 +73,31 @@ public class Menu extends JFrame implements ActionListener {
 		ImageIcon savei = new ImageIcon(getClass().getResource("save.png"));
 		ImageIcon exiti = new ImageIcon(getClass().getResource("exit.png"));
 
-        openb = new JButton(openi);
-        openb.addActionListener(this);
-        saveb = new JButton(savei);
-        saveb.addActionListener(this);
-        exitb = new JButton(exiti);
-        exitb.addActionListener(this);
-        scheduleb = new JButton("Generate Schedule");
-        scheduleb.addActionListener(this);
-        
-        tb.add(openb);
-        tb.add(saveb);
-        tb.add(exitb);
-        tb.add(scheduleb);
-        tb.setAlignmentX(0);
+		openb = new JButton(openi);
+		openb.addActionListener(this);
+		saveb = new JButton(savei);
+		saveb.addActionListener(this);
+		exitb = new JButton(exiti);
+		exitb.addActionListener(this);
+		scheduleb = new JButton();
+		scheduleb.setText("<html>Generate<br>Schedule</html>");
+		scheduleb.addActionListener(this);
+		JPanel flowNorth = new JPanel(); // defaults to centered FlowLayout
+		flowNorth.add(scheduleb);
 
+		tb.add(openb);
+		tb.add(saveb);
+		tb.add(exitb);
+		tb.add(flowNorth);
+		tb.setAlignmentX(0);
 
 	}
 
 	public void actionPerformed(ActionEvent event) {
 		Object obj = event.getSource();
 		chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		chooser.setFileFilter(chooser.getAcceptAllFileFilter());
 		if (obj.equals(open) || obj.equals(openb)) {
 			// use chooser.getSelectedFile() to get file
 			// Some code here to parse or call a parser
@@ -109,7 +115,8 @@ public class Menu extends JFrame implements ActionListener {
 			// Probably want to do checking here if user wants to save
 			System.exit(0);
 		} else if (obj.equals(scheduleb)) {
-			//Code here to call schedule algorithm and display schedules
+			// Code here to call schedule algorithm and display schedules
+			Schedulizer.genSchedule(students);
 		}
 
 	}
@@ -121,6 +128,7 @@ public class Menu extends JFrame implements ActionListener {
 	public JToolBar getToolBar() {
 		return tb;
 	}
+
 	private void readFile(File filename) {
 		try {
 			FileInputStream fis = new FileInputStream(filename);

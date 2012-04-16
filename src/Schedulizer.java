@@ -9,11 +9,11 @@ public class Schedulizer {
 	 * @param args
 	 */
 	@SuppressWarnings("null")
-	public static void main(String[] args) {
+	public static void genSchedule(StudentDB stds) {
 
-		List<Students> std = new ArrayList<Students>();
+		List<Students> std = stds.getStudents();
 
-		Scanner in = new Scanner(System.in);
+		/*Scanner in = new Scanner(System.in);
 
 		System.out.print("Input student info: name:");
 		String name = in.nextLine();
@@ -34,7 +34,7 @@ public class Schedulizer {
 			name = in.nextLine();
 		}
 
-		System.out.println("\nTotal students: " + std.size());
+		System.out.println("\nTotal students: " + std.size());*/
 
 		//sort by age.
 		Collections.sort(std);
