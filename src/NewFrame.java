@@ -14,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
@@ -33,7 +34,7 @@ public class NewFrame implements TableModelListener {
 	String[] validStates = { "", "K", "1", "2", "3", "4", "5", "6", "7", "8" };
 
 	public NewFrame(JFrame f, StudentDB s) {
-		ColumnRenderer cr = new ColumnRenderer();
+		ComboRenderer cr = new ComboRenderer();
 		frame = f;
 		students = s;
 		try {
@@ -70,14 +71,23 @@ public class NewFrame implements TableModelListener {
 		table.setShowGrid(true);
 		table.setGridColor(Color.BLACK);
 		table.setRowHeight(20);
+		table.setCellSelectionEnabled(true);
 
 		// Create the combo box editor
 		JComboBox comboBox = new JComboBox(validStates);
 		comboBox.setEditable(true);
 		DefaultCellEditor editor = new DefaultCellEditor(comboBox);
+		
+		// Create the textfield editor
+		JTextField text = new JTextField();
+		text.setEditable(true);
+		DefaultCellEditor teditor = new DefaultCellEditor(text);
+
 
 		// Render comboboxes properly
 		TableColumnModel tcm = table.getColumnModel();
+		tcm.getColumn(0).setCellEditor(teditor);
+		tcm.getColumn(1).setCellEditor(teditor);
 		tcm.getColumn(2).setCellEditor(editor);
 		tcm.getColumn(2).setCellRenderer(cr);
 		tcm.getColumn(3).setCellEditor(editor);
