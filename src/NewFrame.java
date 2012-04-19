@@ -207,6 +207,11 @@ public class NewFrame implements TableModelListener {
 					}
 				} else {
 					x = Integer.parseInt(d.toString());
+					if (x < 0) {
+						JOptionPane.showMessageDialog(frame,
+								"Age must be a positive number.\n");
+							table.setValueAt("", row, column);
+					}
 					s.setAge(x);
 				}
 			} catch (NumberFormatException n) {
