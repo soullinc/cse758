@@ -30,6 +30,9 @@ public class StudentDB {
 	
 	public boolean hasStudent (String name) {
 		Iterator<Students> it = students.iterator();
+		if (name.isEmpty()) {
+			return false;
+		}
 		while(it.hasNext()) {
 			Students s = it.next();
 			if (s.getName().equals(name))

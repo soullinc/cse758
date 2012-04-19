@@ -76,7 +76,7 @@ public class NewFrame implements TableModelListener {
 
 		// Create the combo box editor
 		JComboBox comboBox = new JComboBox(validStates);
-		comboBox.setEditable(true);
+		// comboBox.setEditable(true);
 		DefaultCellEditor editor = new DefaultCellEditor(comboBox);
 
 		// Create the textfield editor
@@ -175,7 +175,7 @@ public class NewFrame implements TableModelListener {
 		Object oldName = backup[row][0];
 		Students s;
 		boolean newStudent = false;
-		if (students.hasStudent(oldName.toString())) {
+		if (!isBlank(oldName.toString()) && students.hasStudent(oldName.toString())) {
 			s = students.getStudent(oldName.toString());
 		} else {
 			s = new Students();
@@ -185,37 +185,80 @@ public class NewFrame implements TableModelListener {
 		int x;
 		switch (column) {
 		case 0:
-			if (students.hasStudent(d.toString())) {
+			if (!isBlank(d.toString()) && students.hasStudent(d.toString())) {
 				JOptionPane
 						.showMessageDialog(
 								frame,
 								"Temporarily not accepting multiple students with same name.\n"
 										+ " Once we establish whether or not students already have student ID numbers,\n"
 										+ " we will change our data structure!");
+				table.setValueAt("", row, column);
 			} else {
 				s.setName(d.toString());
 			}
 			break;
 		case 1:
 			try {
-				x = Integer.parseInt(d.toString());
-				s.setAge(x);
+				if (data[row][0].toString().isEmpty()) {
+					if (!isBlank(d.toString())) {
+						JOptionPane.showMessageDialog(frame,
+							"Please provide a name first.\n");
+						table.setValueAt("", row, column);
+					}
+				} else {
+					x = Integer.parseInt(d.toString());
+					s.setAge(x);
+				}
 			} catch (NumberFormatException n) {
-				JOptionPane.showMessageDialog(frame,
-						"Age must be a numerical value.");
+				if (!isBlank(d.toString())) {
+					JOptionPane.showMessageDialog(frame,
+							"Age must be a numerical value.");
+					table.setValueAt("", row, column);
+
+				}
 			}
 			break;
 		case 2:
-			x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
-			s.setMath(x);
+			if (data[row][0].toString().isEmpty()) {
+				if (!isBlank(d.toString())) {
+					JOptionPane.showMessageDialog(frame,
+						"Please provide a name first.\n");
+					table.setValueAt("", row, column);
+				}
+
+			} else {
+				x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
+						.toString());
+				s.setMath(x);
+			}
 			break;
 		case 3:
-			x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
-			s.setRead(x);
+			if (data[row][0].toString().isEmpty()) {
+				if (!isBlank(d.toString())) {
+					JOptionPane.showMessageDialog(frame,
+						"Please provide a name first.\n");
+					table.setValueAt("", row, column);
+				}
+
+			} else {
+				x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
+						.toString());
+				s.setRead(x);
+			}
 			break;
 		case 4:
-			x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
-			s.setLA(x);
+			if (data[row][0].toString().isEmpty()) {
+				if (!isBlank(d.toString())) {
+					JOptionPane.showMessageDialog(frame,
+						"Please provide a name first.\n");
+					table.setValueAt("", row, column);
+				}
+
+			} else {
+				x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
+						.toString());
+				s.setLA(x);
+			}
 			break;
 		}
 
@@ -224,7 +267,19 @@ public class NewFrame implements TableModelListener {
 		} else {
 			students.modifyStudent(oldName.toString(), s);
 		}
-
+		backup = data;
 	}
 
+	private static boolean isBlank(String str) {
+		int strLen;
+		if (str == null || (strLen = str.length()) == 0) {
+			return true;
+		}
+		for (int i = 0; i < strLen; i++) {
+			if ((Character.isWhitespace(str.charAt(i)) == false)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
