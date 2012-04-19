@@ -11,6 +11,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -57,13 +58,13 @@ public class NewFrame implements TableModelListener {
 		menuBar.setPreferredSize(new Dimension(200, 20));
 		// Set the menu bar and add the label to the content pane.
 		frame.setJMenuBar(menuBar);
-		
+
 		JToolBar tb = menu.getToolBar();
 		JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(tb);
-        frame.add(panel, BorderLayout.NORTH);
-		
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(tb);
+		frame.add(panel, BorderLayout.NORTH);
+
 		populateTable();
 
 		table = new JTable(data, columnNames);
@@ -77,12 +78,11 @@ public class NewFrame implements TableModelListener {
 		JComboBox comboBox = new JComboBox(validStates);
 		comboBox.setEditable(true);
 		DefaultCellEditor editor = new DefaultCellEditor(comboBox);
-		
+
 		// Create the textfield editor
 		JTextField text = new JTextField();
 		text.setEditable(true);
 		DefaultCellEditor teditor = new DefaultCellEditor(text);
-
 
 		// Render comboboxes properly
 		TableColumnModel tcm = table.getColumnModel();
@@ -185,11 +185,25 @@ public class NewFrame implements TableModelListener {
 		int x;
 		switch (column) {
 		case 0:
-			s.setName(d.toString());
+			if (students.hasStudent(d.toString())) {
+				JOptionPane
+						.showMessageDialog(
+								frame,
+								"Temporarily not accepting multiple students with same name.\n"
+										+ " Once we establish whether or not students already have student ID numbers,\n"
+										+ " we will change our data structure!");
+			} else {
+				s.setName(d.toString());
+			}
 			break;
 		case 1:
-			x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
-			s.setAge(x);
+			try {
+				x = Integer.parseInt(d.toString());
+				s.setAge(x);
+			} catch (NumberFormatException n) {
+				JOptionPane.showMessageDialog(frame,
+						"Age must be a numerical value.");
+			}
 			break;
 		case 2:
 			x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d.toString());
