@@ -30,7 +30,7 @@ public class StudentDB {
 	
 	public boolean hasStudent (String name) {
 		Iterator<Students> it = students.iterator();
-		if (name.isEmpty()) {
+		if (Utilities.isBlank(name)) {
 			return false;
 		}
 		while(it.hasNext()) {

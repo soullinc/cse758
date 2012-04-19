@@ -175,17 +175,19 @@ public class NewFrame implements TableModelListener {
 		Object oldName = backup[row][0];
 		Students s;
 		boolean newStudent = false;
-		if (!isBlank(oldName.toString()) && students.hasStudent(oldName.toString())) {
+		if (students.hasStudent(oldName.toString())) {
 			s = students.getStudent(oldName.toString());
 		} else {
 			s = new Students();
 			newStudent = true;
 		}
 
+		boolean isBlank = Utilities.isBlank(d.toString());
+
 		int x;
 		switch (column) {
 		case 0:
-			if (!isBlank(d.toString()) && students.hasStudent(d.toString())) {
+			if (!isBlank && students.hasStudent(d.toString())) {
 				JOptionPane
 						.showMessageDialog(
 								frame,
@@ -200,9 +202,9 @@ public class NewFrame implements TableModelListener {
 		case 1:
 			try {
 				if (data[row][0].toString().isEmpty()) {
-					if (!isBlank(d.toString())) {
+					if (!isBlank) {
 						JOptionPane.showMessageDialog(frame,
-							"Please provide a name first.\n");
+								"Please provide a name first.\n");
 						table.setValueAt("", row, column);
 					}
 				} else {
@@ -210,12 +212,12 @@ public class NewFrame implements TableModelListener {
 					if (x < 0) {
 						JOptionPane.showMessageDialog(frame,
 								"Age must be a positive number.\n");
-							table.setValueAt("", row, column);
+						table.setValueAt("", row, column);
 					}
 					s.setAge(x);
 				}
 			} catch (NumberFormatException n) {
-				if (!isBlank(d.toString())) {
+				if (!isBlank) {
 					JOptionPane.showMessageDialog(frame,
 							"Age must be a numerical value.");
 					table.setValueAt("", row, column);
@@ -225,66 +227,62 @@ public class NewFrame implements TableModelListener {
 			break;
 		case 2:
 			if (data[row][0].toString().isEmpty()) {
-				if (!isBlank(d.toString())) {
+				if (!isBlank) {
 					JOptionPane.showMessageDialog(frame,
-						"Please provide a name first.\n");
+							"Please provide a name first.\n");
 					table.setValueAt("", row, column);
 				}
 
 			} else {
-				x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
-						.toString());
-				s.setMath(x);
+				if (!isBlank) {
+					x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
+							.toString());
+					s.setMath(x);
+				}
 			}
 			break;
 		case 3:
 			if (data[row][0].toString().isEmpty()) {
-				if (!isBlank(d.toString())) {
+				if (!isBlank) {
 					JOptionPane.showMessageDialog(frame,
-						"Please provide a name first.\n");
+							"Please provide a name first.\n");
 					table.setValueAt("", row, column);
 				}
 
 			} else {
-				x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
-						.toString());
-				s.setRead(x);
+				if (!isBlank) {
+					x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
+							.toString());
+					s.setRead(x);
+				}
 			}
 			break;
 		case 4:
 			if (data[row][0].toString().isEmpty()) {
-				if (!isBlank(d.toString())) {
+				if (!isBlank) {
 					JOptionPane.showMessageDialog(frame,
-						"Please provide a name first.\n");
+							"Please provide a name first.\n");
 					table.setValueAt("", row, column);
 				}
 
 			} else {
-				x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
-						.toString());
-				s.setLA(x);
+				if (!isBlank) {
+					x = (d.toString().equals("K")) ? 0 : Integer.parseInt(d
+							.toString());
+					s.setLA(x);
+				}
 			}
 			break;
 		}
 
-		if (newStudent) {
-			students.addStudent(s);
-		} else {
-			students.modifyStudent(oldName.toString(), s);
+		if (!isBlank) {
+			if (newStudent) {
+				students.addStudent(s);
+			} else {
+				students.modifyStudent(oldName.toString(), s);
+			}
+			backup = data;
 		}
-		backup = data;
 	}
 
-	private static boolean isBlank(String str) {
-		int strLen;
-		if (str == null || (strLen = str.length()) == 0) {
-			return true;
-		}
-		for (int i = 0; i < strLen; i++) {
-			if ((Character.isWhitespace(str.charAt(i)) == false)) {
-				return false;
-			}
-		}
-		return true;
-	}
 }
