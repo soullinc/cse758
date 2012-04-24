@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
@@ -32,8 +33,8 @@ public class Menu extends JFrame implements ActionListener {
 	JMenuBar bar;
 	JToolBar tb;
 	JFrame frame;
-	JMenu file, edit, exit;
-	JMenuItem open, save, copy, paste, exit1;
+	JMenu file, edit, exit, pref;
+	JMenuItem open, save, copy, paste, exit1, pref1;
 	JButton openb, saveb, exitb, scheduleb;
 	JTextArea textArea;
 	JFileChooser chooser;
@@ -63,6 +64,15 @@ public class Menu extends JFrame implements ActionListener {
 		exit = new JMenu(" Exit ");
 		exit1 = new JMenuItem("Exit Application");
 		exit1.addActionListener(this);
+
+		// *****add by Kai****
+
+		pref = new JMenu(" Preference ");
+		pref1 = new JMenuItem("Set Max number of classes");
+		pref1.addActionListener(this);
+		pref.add(pref1);
+		bar.add(pref);
+		// end of Kai's edit
 
 		exit.add(exit1);
 		bar.add(exit);
@@ -118,7 +128,22 @@ public class Menu extends JFrame implements ActionListener {
 			// Code here to call schedule algorithm and display schedules
 			Schedulizer.genSchedule(students);
 		}
-
+		// Starting Kai's edit
+		else if (obj.equals(pref1)) {
+			String str = JOptionPane.showInputDialog(null,
+					"Enter max number of classes : ", "Set Max number of Classes", 1);
+			try{
+			if (str != null) {
+				ClassFactory.setMaxCls(Integer.parseInt(str));
+				JOptionPane.showMessageDialog(null, "Max number of classes successfully set to"+ClassFactory.getMaxCls(), 
+						"Success", 1);
+			}
+			}catch(Exception e){
+				JOptionPane.showMessageDialog(null, "Please input an integer.", 
+						"Warning", 1);
+			}
+		}
+		// end of kai's edit
 	}
 
 	public JMenuBar getMenu() {

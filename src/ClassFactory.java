@@ -96,6 +96,7 @@ public class ClassFactory {
 	 */
 	public static void setMaxCls(int i){
 		maxCls=i;
+		System.out.println("max number of cls set to:"+i);
 	}
 	
 	/**
