@@ -57,6 +57,13 @@ public class ClassFactory {
 	 * 			True if yes, false otherwise.
 	 */
 	public static boolean compatible(Students std, Classes cls) {
+		if(cls.getBL3()==1 && std.getBL()==3){
+			return false;
+		}
+		if(cls.getBL2()==3 && (std.getBL()==2 || std.getBL()==3)){
+			return false;
+		}
+		
 		if (cls.getClsName().equals("math")) {
 			if(cls.getLvl()==std.getMath() && Math.abs(cls.getLowestAge()-std.getAge())<3 && cls.getTotal()<5){
 				return true;
