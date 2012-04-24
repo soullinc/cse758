@@ -42,55 +42,130 @@ public class Schedulizer {
 			System.out.println(std.get(i).toString());
 		}
 
-		// List<Classes> math = new ArrayList<Classes>();
-		// List<Classes> la = new ArrayList<Classes>();
-		// List<Classes> read = new ArrayList<Classes>();
-
 		Classes mathClass = null, laClass = null, readClass = null;
+		List<Students> unluckyStd = new ArrayList<Students>();
+		boolean foundCls;
 		for (int i = 0; i < std.size(); i++) {
-
+			
+			foundCls=false;
+				
 			// schedulize math class
+			//check if there is already a class compatible with current student
 			for (Classes cls : ClassFactory.mathClsLst) {
 				if (ClassFactory.compatible(std.get(i), cls)) {
 					mathClass = cls;
+					mathClass.addStd(std.get(i));
+					foundCls=true;
 					break;
 				}
 			}
-			if (mathClass == null) {
-				mathClass = ClassFactory.createClass("math", std.get(i)
-						.getMath());
-				ClassFactory.mathClsLst.add(mathClass);
+			
+			//no compatible cls, check if we can create a new class, remember there is a limit on max#ofCls
+//			if(mathClass == null && ClassFactory.getMaxCls()<=ClassFactory.getTotalMath()){
+//				unluckyStd.add(std.get(i));
+//				
+//				continue;// those unlucky students...
+//			}else if (mathClass == null) {
+//				mathClass = ClassFactory.createClass("math", std.get(i)
+//						.getMath());
+//				ClassFactory.mathClsLst.add(mathClass);
+//				mathClass.addStd(std.get(i));
+//				
+//			}
+			
+			if(!foundCls){
+				if(ClassFactory.getTotalMath()<ClassFactory.getMaxCls()){
+					mathClass = ClassFactory.createClass("math", std.get(i)
+							.getMath());
+					ClassFactory.mathClsLst.add(mathClass);
+					mathClass.addStd(std.get(i));
+					foundCls=true;
+				}else{
+					unluckyStd.add(std.get(i));
+					continue;// those unlucky students...
+				}
 			}
-			mathClass.addStd(std.get(i));
-			mathClass = null;
-
+			
+			
+			foundCls=false;
 			// schedulize LA class
 			for (Classes cls : ClassFactory.laClsLst) {
 				if (ClassFactory.compatible(std.get(i), cls)) {
 					laClass = cls;
+					laClass.addStd(std.get(i));
+					foundCls=true;
+					break;
 				}
 			}
-			if (laClass == null) {
-				laClass = ClassFactory.createClass("la", std.get(i).getLA());
-				ClassFactory.laClsLst.add(laClass);
+//			if(laClass == null && ClassFactory.getMaxCls()<=ClassFactory.getTotalLA()){
+//				unluckyStd.add(std.get(i));
+//				//roll back...
+//				mathClass.removeStd(std.get(i).getName());
+//				continue;// those unlucky students...
+//			}else if (laClass == null) {
+//				laClass = ClassFactory.createClass("la", std.get(i).getLA());
+//				ClassFactory.laClsLst.add(laClass);
+//				laClass.addStd(std.get(i));
+//			}
+			if(!foundCls){
+				if(ClassFactory.getTotalLA()<ClassFactory.getMaxCls()){
+					laClass = ClassFactory.createClass("la", std.get(i).getLA());
+					ClassFactory.laClsLst.add(laClass);
+					laClass.addStd(std.get(i));
+					foundCls=true;
+				}else{
+					unluckyStd.add(std.get(i));
+					//roll back...
+					mathClass.removeStd(std.get(i).getName());
+					continue;// those unlucky students...
+				}
 			}
-			laClass.addStd(std.get(i));
-			laClass = null;
-
+			
+			
+			
+			foundCls=false;
 			// schedulize reading class
 			for (Classes cls : ClassFactory.readClsLst) {
 				if (ClassFactory.compatible(std.get(i), cls)) {
 					readClass = cls;
+					readClass.addStd(std.get(i));
+					foundCls=true;
+					break;
 				}
 			}
-			if (readClass == null) {
-				readClass = ClassFactory.createClass("read", std.get(i)
-						.getRead());
-				ClassFactory.readClsLst.add(readClass);
+//			if(readClass == null && ClassFactory.getMaxCls()<=ClassFactory.getTotalRead()){
+//				unluckyStd.add(std.get(i));
+//				//roll back...
+//				mathClass.removeStd(std.get(i).getName());
+//				laClass.removeStd(std.get(i).getName());
+//				continue;// those unlucky students...
+//			}else if (readClass == null) {
+//				readClass = ClassFactory.createClass("read", std.get(i)
+//						.getRead());
+//				ClassFactory.readClsLst.add(readClass);
+//				readClass.addStd(std.get(i));
+//			}
+			
+			if(!foundCls){
+				if(ClassFactory.getTotalRead()<ClassFactory.getMaxCls()){
+					readClass = ClassFactory.createClass("read", std.get(i).getRead());
+					ClassFactory.readClsLst.add(readClass);
+					readClass.addStd(std.get(i));
+					foundCls=true;
+				}else{
+					unluckyStd.add(std.get(i));
+					//roll back...
+					mathClass.removeStd(std.get(i).getName());
+					laClass.removeStd(std.get(i).getName());
+					continue;// those unlucky students...
+				}
 			}
-			readClass.addStd(std.get(i));
-			readClass = null;
-
+			
+			
+//			//get ready for next round.
+//			mathClass=null;
+//			laClass=null;
+//			readClass = null;
 		}
 
 		System.out.println("*********Results************");
@@ -112,6 +187,11 @@ public class Schedulizer {
 			System.out.println(cls.toString());
 		}
 
+		
+		System.out.println("*******Unlucky Students********");
+		for(Students stdss:unluckyStd){
+			System.out.println(stdss.toString());
+		}
 	}
 
 }

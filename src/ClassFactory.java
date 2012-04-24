@@ -7,7 +7,7 @@ public class ClassFactory {
 	private static int totalMath = 0;
 	private static int totalLA = 0;
 	private static int totalRead = 0;
-	private static int maxCls=15;
+	private static int maxCls=4;
 
 	private ClassFactory() {
 		// empty
@@ -82,7 +82,21 @@ public class ClassFactory {
 		}
 	}
 	
+	/**
+	 * Set max number of classes allowed. default is 15.
+	 * @param i
+	 * 			max number of cls allowed.
+	 */
 	public static void setMaxCls(int i){
 		maxCls=i;
+	}
+	
+	/**
+	 * Get max number of classes allowed.
+	 * @return
+	 * 		number of max classes.
+	 */
+	public static int getMaxCls(){
+		return maxCls;
 	}
 }
