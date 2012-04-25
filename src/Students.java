@@ -1,8 +1,15 @@
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
-public class Students implements Comparable<Students>{
+
+public class Students implements Comparable<Students> {
 	
-	private String name;
-	private int age;
+	private int id;
+	private String fName;
+	private String lName;
+	private Date birthDate;
+	private double numBDate;
 	private int math;
 	private int la;
 	private int read;
@@ -15,22 +22,40 @@ public class Students implements Comparable<Students>{
 	public Students() {
 		totalStudents++;
 	}
-	public Students(String name, int age,int math,int la, int read){
+	public Students(Integer id, String fName, String lName, Date bDate,int math,int la, int read, int bl){
 		totalStudents+=1;
-		this.name=name;
-		this.age=age;
+		this.id = id;
+		this.fName=fName;
+		this.lName = lName;
+		this.birthDate = bDate;
 		this.math=math;
 		this.la=la;
 		this.read=read;
-				
+		this.bl = bl;		
 	}
 	
-	public String getName(){
-		return this.name;
+	public int getId() {
+		return this.id;
 	}
 	
-	public int getAge(){
-		return this.age;
+	public String getFirstName(){
+		return this.fName;
+	}
+	
+	public String getLastName(){
+		return this.lName;
+	}
+	
+	public Date getBirthDate() {
+		return this.birthDate;
+	}
+	
+	public double getAge(){
+		Calendar c = new GregorianCalendar();
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH);
+		double numDate = year + (month/12.0);
+		return numDate - numBDate;
 	}
 	
 	public int getMath(){
@@ -45,12 +70,25 @@ public class Students implements Comparable<Students>{
 		return this.read;
 	}
 	
-	public void setName(String name){
-		this.name=name;
+	
+	public void setFirstName(String name){
+		this.fName=name;
 	}
 	
-	public void setAge(int age){
-		this.age=age;
+	public void setLastName(String name){
+		this.lName=name;
+	}
+	
+	public void setBirthDate(Date bDate){
+		this.birthDate = bDate;
+		
+		Calendar c = new GregorianCalendar();
+		c.setTime(bDate);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH);
+		
+		this.numBDate = year + (month/12.0);
+		
 	}
 	
 	public void setMath(int lvl){
@@ -65,18 +103,26 @@ public class Students implements Comparable<Students>{
 		this.read=lvl;
 	}
 	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public static int getTotal(){
 		return totalStudents;
 	}
 
+	public double compareAge(Students std) {
+		return this.getAge()-std.getAge();
+	}
+	
 	@Override
 	public int compareTo(Students std) {
-		return this.age-std.age;
+		return (int) Math.floor(this.getAge()-std.getAge());
 	}
 
 	@Override
 	public String toString(){
-		return "Student name:"+name+"; age: "+age+"; Math level: "+math+"; LA level: "+la+"; Reading level: "+read+".\n";
+		return "Student name:"+fName+" "+lName+"; age: "+Math.floor(getAge())+"; Math level: "+math+"; LA level: "+la+"; Reading level: "+read+".\n";
 		
 	}
 	

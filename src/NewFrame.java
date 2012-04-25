@@ -3,7 +3,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.swing.BoxLayout;
@@ -30,9 +34,11 @@ public class NewFrame implements TableModelListener {
 	StudentDB students;
 	static Object[][] data;
 	Object[][] backup;
-	String[] columnNames = { "Name", "Age", "Math Level", "Reading Level",
-			"Language Arts Level" };
+	String[] columnNames = { "Student ID", "First Name", "Last Name",
+			"Birth Date", "Math Level", "Reading Level", "Language Arts Level",
+			"Behavioral Level" };
 	String[] validStates = { "", "K", "1", "2", "3", "4", "5", "6", "7", "8" };
+	String[] behaviorLevels = { "1", "2", "3" };
 
 	public NewFrame(JFrame f, StudentDB s) {
 		ComboRenderer cr = new ComboRenderer();
@@ -76,8 +82,10 @@ public class NewFrame implements TableModelListener {
 
 		// Create the combo box editor
 		JComboBox comboBox = new JComboBox(validStates);
+		JComboBox behaviorBox = new JComboBox(behaviorLevels);
 		// comboBox.setEditable(true);
 		DefaultCellEditor editor = new DefaultCellEditor(comboBox);
+		DefaultCellEditor bEditor = new DefaultCellEditor(behaviorBox);
 
 		// Create the textfield editor
 		JTextField text = new JTextField();
@@ -88,12 +96,16 @@ public class NewFrame implements TableModelListener {
 		TableColumnModel tcm = table.getColumnModel();
 		tcm.getColumn(0).setCellEditor(teditor);
 		tcm.getColumn(1).setCellEditor(teditor);
-		tcm.getColumn(2).setCellEditor(editor);
-		tcm.getColumn(2).setCellRenderer(cr);
-		tcm.getColumn(3).setCellEditor(editor);
-		tcm.getColumn(3).setCellRenderer(cr);
+		tcm.getColumn(2).setCellEditor(teditor);
+		tcm.getColumn(3).setCellEditor(teditor);
 		tcm.getColumn(4).setCellEditor(editor);
 		tcm.getColumn(4).setCellRenderer(cr);
+		tcm.getColumn(5).setCellEditor(editor);
+		tcm.getColumn(5).setCellRenderer(cr);
+		tcm.getColumn(6).setCellEditor(editor);
+		tcm.getColumn(6).setCellRenderer(cr);
+		tcm.getColumn(7).setCellEditor(bEditor);
+		tcm.getColumn(7).setCellRenderer(cr);
 
 		// Make Table Scrollable
 		JScrollPane pane = new JScrollPane(table);
@@ -111,27 +123,31 @@ public class NewFrame implements TableModelListener {
 	// JTable
 	private void populateTable() {
 		int i = 0;
-		data = new Object[300][5];
+		data = new Object[300][7];
 		if (students.getSize() > 0) {
 			ArrayList<Students> stdList = students.getStudents();
 			Iterator<Students> it = stdList.iterator();
 			while (it.hasNext()) {
 
 				Students s = it.next();
-				data[i][0] = s.getName();
-				data[i][1] = s.getAge();
+				data[i][0] = s.getId();
+				data[i][1] = s.getFirstName();
+				data[i][2] = s.getLastName();
+				data[i][3] = s.getBirthDate();
 				int mLevel = s.getMath();
 				String math = (mLevel == 0) ? "K" : Integer.toString(mLevel);
-				data[i][2] = math;
+				data[i][4] = math;
 
 				int rLevel = s.getRead();
 				String reading = (rLevel == 0) ? "K" : Integer.toString(rLevel);
-				data[i][3] = reading;
+				data[i][5] = reading;
 
 				int lLevel = s.getLA();
 				String la = (lLevel == 0) ? "K" : Integer.toString(lLevel);
-				data[i][4] = la;
+				data[i][6] = la;
+				data[i][7] = Integer.toString(s.getBL());
 				i++;
+
 			}
 		}
 
@@ -172,11 +188,18 @@ public class NewFrame implements TableModelListener {
 		Object d = model.getValueAt(row, column);
 		System.out.println(d.toString());
 
-		Object oldName = backup[row][0];
+		Object oldIDObj = backup[row][0];
+		int oldId;
+		try {
+			oldId = Integer.parseInt(oldIDObj.toString());
+		} catch (NumberFormatException ne) {
+			oldId = -1;
+		}
+
 		Students s;
 		boolean newStudent = false;
-		if (students.hasStudent(oldName.toString())) {
-			s = students.getStudent(oldName.toString());
+		if (students.hasStudent(oldId)) {
+			s = students.getStudent(oldId);
 		} else {
 			s = new Students();
 			newStudent = true;
@@ -187,49 +210,71 @@ public class NewFrame implements TableModelListener {
 		int x;
 		switch (column) {
 		case 0:
-			if (!isBlank && students.hasStudent(d.toString())) {
-				JOptionPane
-						.showMessageDialog(
-								frame,
-								"Temporarily not accepting multiple students with same name.\n"
-										+ " Once we establish whether or not students already have student ID numbers,\n"
-										+ " we will change our data structure!");
-				table.setValueAt("", row, column);
-			} else {
-				s.setName(d.toString());
+			int id;
+			try {
+				id = Integer.parseInt(d.toString());
+				if (!isBlank && students.hasStudent(id)) {
+					JOptionPane
+							.showMessageDialog(frame,
+									"A student with that ID already exists in the scheduling system.");
+					table.setValueAt("", row, column);
+				} else {
+					s.setId(id);
+				}
+			} catch (NumberFormatException ne) {
+				JOptionPane.showMessageDialog(frame,
+						"Student ID should be an integer value");
 			}
+
 			break;
 		case 1:
-			try {
-				if (data[row][0].toString().isEmpty()) {
-					if (!isBlank) {
-						JOptionPane.showMessageDialog(frame,
-								"Please provide a name first.\n");
-						table.setValueAt("", row, column);
-					}
-				} else {
-					x = Integer.parseInt(d.toString());
-					if (x < 0) {
-						JOptionPane.showMessageDialog(frame,
-								"Age must be a positive number.\n");
-						table.setValueAt("", row, column);
-					}
-					s.setAge(x);
-				}
-			} catch (NumberFormatException n) {
+			if (data[row][0].toString().isEmpty()) {
 				if (!isBlank) {
 					JOptionPane.showMessageDialog(frame,
-							"Age must be a numerical value.");
+							"Please provide a Student ID first.\n");
 					table.setValueAt("", row, column);
-
 				}
+			} else {
+				s.setFirstName(d.toString());
 			}
 			break;
 		case 2:
 			if (data[row][0].toString().isEmpty()) {
 				if (!isBlank) {
 					JOptionPane.showMessageDialog(frame,
-							"Please provide a name first.\n");
+							"Please provide a Student ID first.\n");
+					table.setValueAt("", row, column);
+				}
+			} else {
+				s.setLastName(d.toString());
+			}
+			break;
+		case 3:
+			try {
+				if (data[row][0].toString().isEmpty()) {
+					if (!isBlank) {
+						JOptionPane.showMessageDialog(frame,
+								"Please provide a Student ID first.\n");
+						table.setValueAt("", row, column);
+					}
+				} else {
+					DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+					Date bDate = df.parse(d.toString());
+					s.setBirthDate(bDate);
+				}
+			} catch (ParseException n) {
+				if (!isBlank) {
+					JOptionPane.showMessageDialog(frame,
+							"Expected Birth Date in the form yyyy-mm-dd");
+					table.setValueAt("", row, column);
+				}
+			}
+			break;
+		case 4:
+			if (data[row][0].toString().isEmpty()) {
+				if (!isBlank) {
+					JOptionPane.showMessageDialog(frame,
+							"Please provide a Student ID first.\n");
 					table.setValueAt("", row, column);
 				}
 
@@ -241,11 +286,11 @@ public class NewFrame implements TableModelListener {
 				}
 			}
 			break;
-		case 3:
+		case 5:
 			if (data[row][0].toString().isEmpty()) {
 				if (!isBlank) {
 					JOptionPane.showMessageDialog(frame,
-							"Please provide a name first.\n");
+							"Please provide a Student ID first.\n");
 					table.setValueAt("", row, column);
 				}
 
@@ -257,11 +302,11 @@ public class NewFrame implements TableModelListener {
 				}
 			}
 			break;
-		case 4:
+		case 6:
 			if (data[row][0].toString().isEmpty()) {
 				if (!isBlank) {
 					JOptionPane.showMessageDialog(frame,
-							"Please provide a name first.\n");
+							"Please provide a Student ID first.\n");
 					table.setValueAt("", row, column);
 				}
 
@@ -273,13 +318,29 @@ public class NewFrame implements TableModelListener {
 				}
 			}
 			break;
+
+		case 7:
+			if (data[row][0].toString().isEmpty()) {
+				if (!isBlank) {
+					JOptionPane.showMessageDialog(frame,
+							"Please provide a Student ID first.\n");
+					table.setValueAt("", row, column);
+				}
+
+			} else {
+				if (!isBlank) {
+					x = Integer.parseInt(d.toString());
+					s.setBL(x);
+				}
+			}
+			break;
 		}
 
 		if (!isBlank) {
 			if (newStudent) {
 				students.addStudent(s);
 			} else {
-				students.modifyStudent(oldName.toString(), s);
+				students.modifyStudent(oldId, s);
 			}
 			backup = data;
 		}

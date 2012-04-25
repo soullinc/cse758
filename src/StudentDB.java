@@ -18,33 +18,30 @@ public class StudentDB {
 		
 	}
 	
-	public Students getStudent (String name) {
+	public Students getStudent (int id) {
 		Iterator<Students> it = students.iterator();
 		while(it.hasNext()) {
 			Students s = it.next();
-			if (s.getName().equals(name))
+			if (s.getId() == id)
 				return s;
 		}
 		return null;
 	}
 	
-	public boolean hasStudent (String name) {
+	public boolean hasStudent (int id) {
 		Iterator<Students> it = students.iterator();
-		if (Utilities.isBlank(name)) {
-			return false;
-		}
 		while(it.hasNext()) {
 			Students s = it.next();
-			if (s.getName().equals(name))
+			if (s.getId() == id)
 				return true;
 		}
 		return false;
 	}
 	
-	public void modifyStudent (String name, Students s) {
+	public void modifyStudent (int id, Students s) {
 		for (int i = 0; i < students.size(); i ++) {
 			Students std = students.get(i);
-			if (std.getName().equals(name)) {
+			if (std.getId() == id) {
 				students.remove(i);
 				students.add(i, s);
 			}

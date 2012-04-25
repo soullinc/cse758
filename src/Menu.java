@@ -10,6 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -130,15 +133,17 @@ public class Menu extends JFrame implements ActionListener {
 		// Starting Kai's edit
 		else if (obj.equals(pref1)) {
 			String str = JOptionPane.showInputDialog(null,
-					"Enter max number of classes : ", "Set Max number of Classes", 1);
-			try{
-			if (str != null) {
-				ClassFactory.setMaxCls(Integer.parseInt(str));
-				JOptionPane.showMessageDialog(null, "Max number of classes successfully set to"+ClassFactory.getMaxCls(), 
-						"Success", 1);
-			}
-			}catch(Exception e){
-				JOptionPane.showMessageDialog(null, "Please input an integer.", 
+					"Enter max number of classes : ",
+					"Set Max number of Classes", 1);
+			try {
+				if (str != null) {
+					ClassFactory.setMaxCls(Integer.parseInt(str));
+					JOptionPane.showMessageDialog(null,
+							"Max number of classes successfully set to"
+									+ ClassFactory.getMaxCls(), "Success", 1);
+				}
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Please input an integer.",
 						"Warning", 1);
 			}
 		}
@@ -160,26 +165,34 @@ public class Menu extends JFrame implements ActionListener {
 			while (br.ready()) {
 				String line = br.readLine();
 				String[] params = line.split(",");
-				if (params.length == 2) {
-					Students s = new Students(params[0],
-							Integer.parseInt(params[1]), 0, 0, 0);
-					students.addStudent(s);
-				} else if (params.length == 5) {
-					Students s = new Students(params[0],
-							Integer.parseInt(params[1]),
-							Integer.parseInt(params[2]),
-							Integer.parseInt(params[4]),
-							Integer.parseInt(params[3]));
-					students.addStudent(s);
-				} else {
-					// error
+				while (params.length < 8) {
+					String[] tmp = new String[params.length + 1];
+					for (int i = 0; i < params.length; i++) {
+						tmp[i] = params[i];
+					}
+					tmp[params.length] = "0";
+					params = tmp;
 				}
+				DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+				Students s = new Students(Integer.parseInt(params[0]),
+						params[1], params[2], df.parse(params[3]),
+						Integer.parseInt(params[4]),
+						Integer.parseInt(params[5]),
+						Integer.parseInt(params[6]),
+						Integer.parseInt(params[7]));
+				students.addStudent(s);
 			}
 			new NewFrame(frame, students);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -194,8 +207,10 @@ public class Menu extends JFrame implements ActionListener {
 			for (int i = 0; i < students.getSize(); i++) {
 				Students s = stds.get(i);
 				String line;
-				line = s.getName() + "," + s.getAge() + "," + s.getMath() + ","
-						+ s.getRead() + "," + s.getLA() + "\n";
+				line = s.getId() + "," + s.getFirstName() + ","
+						+ s.getLastName() + "," + s.getBirthDate().toString()
+						+ "," + s.getMath() + "," + s.getRead() + ","
+						+ s.getLA() + "," + s.getBL() + "\n";
 				bw.append(line);
 
 			}

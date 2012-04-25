@@ -21,7 +21,7 @@ public class Classes {
 	public void addStd(Students std){
 		students.add(std);
 		if (std.getAge()<lowestAge){
-			this.lowestAge=std.getAge();
+			this.lowestAge= (int) Math.floor(std.getAge());
 		}
 		if(std.getBL()==3){
 			this.bl3++;
