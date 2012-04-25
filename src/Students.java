@@ -7,6 +7,7 @@ public class Students implements Comparable<Students>{
 	private int la;
 	private int read;
 	private static int totalStudents=0;
+	private int bl;
 	
 	//TODO: Replace Age with BDate and calculate Age.
 	//Largest age gap 3yrs 11 months
@@ -77,5 +78,23 @@ public class Students implements Comparable<Students>{
 	public String toString(){
 		return "Student name:"+name+"; age: "+age+"; Math level: "+math+"; LA level: "+la+"; Reading level: "+read+".\n";
 		
+	}
+	
+	/**
+	 * Set behavior lvl
+	 * @param i
+	 * 		Std's behavior lvl
+	 */
+	public void setBL(int i){
+		this.bl=i;
+	}
+	
+	/**
+	 * Get behavior lvl
+	 * @return
+	 * 		Std's behavior lvl
+	 */
+	public int getBL(){
+		return this.bl;
 	}
 }

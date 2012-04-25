@@ -8,6 +8,8 @@ public class Classes {
 	private int totalStd;
 	private List<Students> students;
 	private int lowestAge=999;
+	private int bl3=0;
+	private int bl2=0;
 	
 	public Classes(String name, int lvl){
 		students = new ArrayList<Students>();
@@ -20,6 +22,11 @@ public class Classes {
 		students.add(std);
 		if (std.getAge()<lowestAge){
 			this.lowestAge=std.getAge();
+		}
+		if(std.getBL()==3){
+			this.bl3++;
+		}else if(std.getBL()==2){
+			this.bl2++;
 		}
 		totalStd++;
 	}
@@ -63,4 +70,22 @@ public class Classes {
 			return "No students in this class.\n";
 		}
 	}
+	
+	/**
+	 * Get number of behavior lvl3 students
+	 * @return	Number of BL3 students
+	 */
+	public int getBL3(){
+		return this.bl3;
+	}
+	
+	/**
+	 * Get number of behavior lvl2 students
+	 * @return	Number of BL2 students
+	 */
+	public int getBL2(){
+		return this.bl2;
+	}
+	
+	
 }
