@@ -31,9 +31,9 @@ public class Classes {
 		totalStd++;
 	}
 	
-	public Students removeStd(String name){
+	public Students removeStd(int id){
 		for(Students std: this.students){
-			if (std.getName()==name){
+			if (std.getId()==id){
 				this.students.remove(std);
 				return std;
 			}
