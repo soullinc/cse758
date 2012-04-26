@@ -1,14 +1,12 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 public class Schedulizer {
 
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("null")
 	public static void genSchedule(StudentDB stds) {
 
 		List<Students> std = stds.getStudents();
