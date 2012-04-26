@@ -123,7 +123,7 @@ public class NewFrame implements TableModelListener {
 	// JTable
 	private void populateTable() {
 		int i = 0;
-		data = new Object[300][7];
+		data = new Object[300][8];
 		if (students.getSize() > 0) {
 			ArrayList<Students> stdList = students.getStudents();
 			Iterator<Students> it = stdList.iterator();
