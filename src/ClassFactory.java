@@ -20,11 +20,12 @@ public class ClassFactory {
 
 	/**
 	 * Check if std's behavior level fit with class.
+	 * 
 	 * @param std
 	 * @param cls
 	 * @return
 	 */
-	private static boolean BLfit(Students std, Classes cls){
+	private static boolean BLfit(Students std, Classes cls) {
 		if (cls.getBL3() == 1 && std.getBL() == 3) {
 			return false;
 		}
@@ -33,8 +34,7 @@ public class ClassFactory {
 		}
 		return true;
 	}
-	
-	
+
 	public static Classes createClass(String name, int lvl) {
 		totalClasses++;
 		if (name.equals("math")) {
@@ -66,9 +66,6 @@ public class ClassFactory {
 		return totalRead;
 	}
 
-	
-	
-	
 	/**
 	 * Check if a student can be assigned to a particular class
 	 * 
@@ -77,7 +74,7 @@ public class ClassFactory {
 	 * @return True if yes, false otherwise.
 	 */
 	public static boolean compatible(Students std, Classes cls) {
-		if(!BLfit(std,cls)){
+		if (!BLfit(std, cls)) {
 			return false;
 		}
 
@@ -140,20 +137,28 @@ public class ClassFactory {
 	 * @param std
 	 * @throws StdClsCompatibleException
 	 */
-	public static void moveStd(Classes fromCls, Classes toCls, Students std) throws StdClsCompatibleException {
+	public static void moveStd(Classes fromCls, Classes toCls, Students std)
+			throws StdClsCompatibleException {
 		if (!fromCls.getClsName().equals(toCls.getClsName())) {
 			throw new StdClsCompatibleException(0);
-		} else if(toCls.getTotal()==5){
+		} else if (toCls.getTotal() == 5) {
 			throw new StdClsCompatibleException(1);
-		}else if(Math.abs(fromCls.getLowestAge()-toCls.getLowestAge())>3.92){
+		} else if (Math.abs(fromCls.getLowestAge() - toCls.getLowestAge()) > 3.92) {
 			throw new StdClsCompatibleException(2);
-		}else if(!BLfit(std,toCls)){
+		} else if (!BLfit(std, toCls)) {
 			throw new StdClsCompatibleException(3);
-		}else if(!compatible(std,toCls)){
+		} else if (!compatible(std, toCls)) {
 			throw new StdClsCompatibleException(4);
-		}else{
+		} else {
 			toCls.addStd(std);
 			fromCls.removeStd(std.getId());
 		}
-		}	
+	}
+	
+	/**
+	 * Even distribute any 2 classes with movable students so that we won't have one class of 5 std while one in another.
+	 */
+	public static void evenDistribute(){
+		
+	}
 }
