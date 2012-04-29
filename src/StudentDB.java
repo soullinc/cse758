@@ -48,11 +48,9 @@ public class StudentDB {
 	}
 	
 	public void removeStudent (int id) {
-		System.out.println(id);
 		for (int i = 0; i < students.size(); i ++) {
 			Students std = students.get(i);
 			if (std.getId() == id) {
-				System.out.println("got to remove");
 				students.remove(i);
 			}
 		}

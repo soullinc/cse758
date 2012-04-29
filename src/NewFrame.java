@@ -203,8 +203,6 @@ public class NewFrame implements TableModelListener {
 		}
 
 		Object oldIDObj = backup[row][0];
-		System.out.println("old ID = " + oldIDObj.toString());
-
 		backup = data;
 		int oldId;
 		try {
@@ -233,8 +231,6 @@ public class NewFrame implements TableModelListener {
 				try {
 					id = Integer.parseInt(d.toString());
 					if (students.hasStudent(id)) {
-						// System.out.println(oldId);
-
 						JOptionPane
 								.showMessageDialog(frame,
 										"A student with that ID already exists in the scheduling system.");
