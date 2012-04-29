@@ -278,8 +278,9 @@ public class NewFrame implements TableModelListener {
 						table.setValueAt("", row, column);
 					}
 				} else {
-					DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+					DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 					Date bDate = df.parse(d.toString());
+					System.out.println(bDate);
 					s.setBirthDate(bDate);
 				}
 			} catch (ParseException n) {

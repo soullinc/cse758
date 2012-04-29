@@ -173,7 +173,7 @@ public class Menu extends JFrame implements ActionListener {
 					tmp[params.length] = "0";
 					params = tmp;
 				}
-				DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				Students s = new Students(Integer.parseInt(params[0]),
 						params[1], params[2], df.parse(params[3]),
 						Integer.parseInt(params[4]),
@@ -207,10 +207,12 @@ public class Menu extends JFrame implements ActionListener {
 			for (int i = 0; i < students.getSize(); i++) {
 				Students s = stds.get(i);
 				String line;
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				line = s.getId() + "," + s.getFirstName() + ","
-						+ s.getLastName() + "," + s.getBirthDate().toString()
-						+ "," + s.getMath() + "," + s.getRead() + ","
-						+ s.getLA() + "," + s.getBL() + "\n";
+						+ s.getLastName() + ","
+						+ df.format(s.getBirthDate()) + ","
+						+ s.getMath() + "," + s.getRead() + "," + s.getLA()
+						+ "," + s.getBL() + "\n";
 				bw.append(line);
 
 			}
