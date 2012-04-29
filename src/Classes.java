@@ -10,11 +10,13 @@ public class Classes {
 	private int lowestAge=999;
 	private int bl3=0;
 	private int bl2=0;
+	private int id;
 	
-	public Classes(String name, int lvl){
+	public Classes(String name, int lvl, int ID){
 		students = new ArrayList<Students>();
 		this.classname=name;
 		this.lvl=lvl;
+		this.id=ID;
 		totalStd=0;
 	}
 	
@@ -87,5 +89,13 @@ public class Classes {
 		return this.bl2;
 	}
 	
+	/**
+	 * Get class ID
+	 * @return
+	 * 	class ID
+	 */
+	public int getClsID(){
+		return this.id;
+	}
 	
 }
