@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -159,6 +160,10 @@ public class NewFrame implements TableModelListener {
 			data[i][2] = "";
 			data[i][3] = "";
 			data[i][4] = "";
+			data[i][5] = "";
+			data[i][6] = "";
+			data[i][7] = "";
+
 			i++;
 		}
 
@@ -186,9 +191,21 @@ public class NewFrame implements TableModelListener {
 		int column = e.getColumn();
 		TableModel model = (TableModel) e.getSource();
 		Object d = model.getValueAt(row, column);
-		System.out.println(d.toString());
+		boolean isBlank = Utilities.isBlank(d.toString());
+
+
+		if (row > 0 && Utilities.isBlank(data[row - 1][0].toString()) && !isBlank) {
+			JOptionPane
+					.showMessageDialog(frame,
+							"Please do not leave open rows within the table");
+			table.setValueAt("", row, column);
+			return;
+		}
 
 		Object oldIDObj = backup[row][0];
+		System.out.println("old ID = " + oldIDObj.toString());
+
+		backup = data;
 		int oldId;
 		try {
 			oldId = Integer.parseInt(oldIDObj.toString());
@@ -205,27 +222,34 @@ public class NewFrame implements TableModelListener {
 			newStudent = true;
 		}
 
-		boolean isBlank = Utilities.isBlank(d.toString());
-
 		int x;
 		switch (column) {
 		case 0:
 			int id;
-			try {
-				id = Integer.parseInt(d.toString());
-				if (!isBlank && students.hasStudent(id)) {
-					JOptionPane
-							.showMessageDialog(frame,
-									"A student with that ID already exists in the scheduling system.");
-					table.setValueAt("", row, column);
-				} else {
-					s.setId(id);
-				}
-			} catch (NumberFormatException ne) {
-				JOptionPane.showMessageDialog(frame,
-						"Student ID should be an integer value");
-			}
 
+			if (isBlank) {
+				cleanStudentDB();
+			} else {
+				try {
+					id = Integer.parseInt(d.toString());
+					if (students.hasStudent(id)) {
+						// System.out.println(oldId);
+
+						JOptionPane
+								.showMessageDialog(frame,
+										"A student with that ID already exists in the scheduling system.");
+						table.setValueAt("", row, column);
+					} else {
+						if (id > 0)
+							s.setId(id);
+					}
+				} catch (NumberFormatException ne) {
+
+					JOptionPane.showMessageDialog(frame,
+							"Student ID should be an integer value");
+
+				}
+			}
 			break;
 		case 1:
 			if (data[row][0].toString().isEmpty()) {
@@ -342,7 +366,29 @@ public class NewFrame implements TableModelListener {
 			} else {
 				students.modifyStudent(oldId, s);
 			}
-			backup = data;
+		}
+	}
+
+	/*
+	 * I apologize for the inefficiency of this, but given the small data set,
+	 * it shouldn't be awful
+	 */
+	private void cleanStudentDB() {
+		List<Students> stds = students.getStudents();
+		for (int i = 0; i < stds.size(); i++) {
+			Students std = stds.get(i);
+			int id = std.getId();
+			for (int j = 0; j < students.getSize(); j++) {
+				try {
+					if (id == Integer.parseInt(data[j][0].toString())) {
+						return;
+					}
+				} catch (NumberFormatException n) {
+					// do nothing
+				}
+			}
+			// if we got here, the student is not in the data array anymore
+			students.removeStudent(id);
 		}
 	}
 

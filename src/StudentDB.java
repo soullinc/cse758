@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.JFrame;
 
@@ -19,21 +18,21 @@ public class StudentDB {
 	}
 	
 	public Students getStudent (int id) {
-		Iterator<Students> it = students.iterator();
-		while(it.hasNext()) {
-			Students s = it.next();
-			if (s.getId() == id)
-				return s;
+		for (int i = 0; i < students.size(); i ++) {
+			Students std = students.get(i);
+			if (std.getId() == id) {
+				return std;
+			}
 		}
 		return null;
 	}
 	
 	public boolean hasStudent (int id) {
-		Iterator<Students> it = students.iterator();
-		while(it.hasNext()) {
-			Students s = it.next();
-			if (s.getId() == id)
+		for (int i = 0; i < students.size(); i ++) {
+			Students std = students.get(i);
+			if (std.getId() == id) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -44,6 +43,17 @@ public class StudentDB {
 			if (std.getId() == id) {
 				students.remove(i);
 				students.add(i, s);
+			}
+		}
+	}
+	
+	public void removeStudent (int id) {
+		System.out.println(id);
+		for (int i = 0; i < students.size(); i ++) {
+			Students std = students.get(i);
+			if (std.getId() == id) {
+				System.out.println("got to remove");
+				students.remove(i);
 			}
 		}
 	}
